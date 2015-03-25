@@ -306,15 +306,15 @@ CREATE TABLE `persons` (
   `person_id` varchar(100) COLLATE utf8_polish_ci DEFAULT NULL,
   `person_givenname` varchar(100) COLLATE utf8_polish_ci NOT NULL,
   `person_surname` varchar(100) COLLATE utf8_polish_ci NOT NULL,
-  `person_email` varchar(100) COLLATE utf8_polish_ci NOT NULL,
-  `person_phone` varchar(64) COLLATE utf8_polish_ci NOT NULL,
+  `person_email` varchar(100) COLLATE utf8_polish_ci DEFAULT NULL,
+  `person_phone` varchar(64) COLLATE utf8_polish_ci DEFAULT NULL,
   `person_location` int(10) unsigned DEFAULT NULL,
   `person_comment` text COLLATE utf8_polish_ci,
   PRIMARY KEY (`id`),
   UNIQUE KEY `person_id` (`person_id`),
   KEY `person_location` (`person_location`),
   CONSTRAINT `persons_ibfk_1` FOREIGN KEY (`person_location`) REFERENCES `locations` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -389,4 +389,4 @@ CREATE TABLE `suppliers` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-03-25 13:48:40
+-- Dump completed on 2015-03-25 14:11:43
