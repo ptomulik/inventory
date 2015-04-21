@@ -32,5 +32,14 @@ Notes
 2. You must define you'r repository path in **config** table. Set the
    **repository_path** record in **config** table.
 
+Developer Notes
+---------------
+
+Updating database structure:
+
+.. code::
+
+  mysqldump -u inventory -p inventory -d --single-transaction | sed 's/ AUTO_INCREMENT=[0-9]*//g' > inventory.sql
+
 .. _LibreOffice Base: https://www.libreoffice.org/discover/base/
 .. _MySQL: http://www.mysql.com/

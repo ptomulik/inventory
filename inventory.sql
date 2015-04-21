@@ -31,7 +31,7 @@ CREATE TABLE `agreements` (
   `agreement_comment` text COLLATE utf8_polish_ci COMMENT 'Agreement Comments',
   PRIMARY KEY (`id`),
   UNIQUE KEY `agreement_id` (`agreement_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +47,7 @@ CREATE TABLE `categories` (
   `category_name` varchar(100) COLLATE utf8_polish_ci NOT NULL,
   `category_comment` text COLLATE utf8_polish_ci,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `committees` (
   `committee_comment` text COLLATE utf8_polish_ci,
   PRIMARY KEY (`id`),
   UNIQUE KEY `committee_id` (`committee_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,7 +121,7 @@ CREATE TABLE `deliveries` (
   KEY `delivery_agreement` (`delivery_agreement`),
   CONSTRAINT `deliveries_ibfk_1` FOREIGN KEY (`delivery_supplier`) REFERENCES `suppliers` (`id`),
   CONSTRAINT `deliveries_ibfk_2` FOREIGN KEY (`delivery_agreement`) REFERENCES `agreements` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,7 +138,7 @@ CREATE TABLE `groups` (
   `group_creation_date` date DEFAULT NULL,
   `group_comment` text COLLATE utf8_polish_ci,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,7 +171,7 @@ CREATE TABLE `items` (
   CONSTRAINT `items_ibfk_2` FOREIGN KEY (`item_purchase`) REFERENCES `purchases` (`id`),
   CONSTRAINT `items_ibfk_4` FOREIGN KEY (`item_location`) REFERENCES `locations` (`id`),
   CONSTRAINT `items_ibfk_6` FOREIGN KEY (`item_quantity_unit`) REFERENCES `quantity_units` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=861 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -233,7 +233,7 @@ CREATE TABLE `licitations` (
   KEY `licitation_committee` (`licitation_committee`),
   KEY `licitation_committee_2` (`licitation_committee`),
   CONSTRAINT `licitations_ibfk_1` FOREIGN KEY (`licitation_committee`) REFERENCES `committees` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,7 +297,7 @@ CREATE TABLE `liquidations` (
   KEY `liquidation_their_committee` (`liquidation_their_committee`),
   CONSTRAINT `liquidations_ibfk_1` FOREIGN KEY (`liquidation_our_committee`) REFERENCES `committees` (`id`),
   CONSTRAINT `liquidations_ibfk_2` FOREIGN KEY (`liquidation_their_committee`) REFERENCES `committees` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -344,7 +344,7 @@ CREATE TABLE `locations` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `location_id` (`location_id`),
   UNIQUE KEY `location_id_2` (`location_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -381,7 +381,7 @@ CREATE TABLE `persons` (
   `person_comment` text COLLATE utf8_polish_ci,
   PRIMARY KEY (`id`),
   UNIQUE KEY `person_id` (`person_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -426,7 +426,7 @@ CREATE TABLE `purchases` (
   CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`purchase_buyer_person`) REFERENCES `persons` (`id`),
   CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`purchase_buyer_commitee`) REFERENCES `committees` (`id`),
   CONSTRAINT `purchases_ibfk_3` FOREIGN KEY (`purchase_supplier`) REFERENCES `suppliers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -441,7 +441,7 @@ CREATE TABLE `quantity_units` (
   `quantity_unit_id` varchar(32) COLLATE utf8_polish_ci NOT NULL,
   `quantity_unit_comment` text COLLATE utf8_polish_ci,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -481,7 +481,7 @@ CREATE TABLE `suppliers` (
   `supplier_comment` text COLLATE utf8_polish_ci COMMENT 'Supplier Comments',
   PRIMARY KEY (`id`),
   UNIQUE KEY `supplier_id` (`supplier_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -493,4 +493,4 @@ CREATE TABLE `suppliers` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-04-14 11:00:11
+-- Dump completed on 2015-04-21  8:11:24
