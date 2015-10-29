@@ -15,7 +15,7 @@ components
 - an on-disk repository where attachments and other files are stored. The
   `MySQL`_ database only keeps track on file locations and physically files are
   stored in this repository,
-- `LibreOffice Base`_ project named **inventory.odb** -- it's purpose is to
+- `LibreOffice Base`_ project named **inventory.odb** -- its purpose is to
   provide user interface to the MySQL.
 
 
@@ -31,6 +31,9 @@ Notes
    **Tools | Options | Security | Macro Protection | Medium**
 2. You must define you'r repository path in **config** table. Set the
    **repository_path** record in **config** table.
+3. You probably also have to install **libreoffice-mysql-connector** package::
+
+    apt-get install libreoffice-mysql-connector
 
 Developer Notes
 ---------------
