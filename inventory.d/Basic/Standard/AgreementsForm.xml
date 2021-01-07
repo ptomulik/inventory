@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="AgreementsForm" script:language="StarBasic">REM  *****  BASIC  *****
+Function agreement_file_GetControlInfo() as Object
+	Dim oInfo as Object
+	oInfo = RepoFileControl.CreateControlInfo()
+	oInfo.fileColumnName  = &quot;agreement_file&quot;
+	oInfo.keyColumnName   = &quot;id&quot;
+	oInfo.idColumnName    = &quot;agreement_id&quot;
+	oInfo.pickerName      = &quot;agreement_file_Picker&quot;
+	oInfo.downloadBtnName = &quot;agreement_file_DownloadBtn&quot;
+	oInfo.uploadBtnName   = &quot;agreement_file_UploadBtn&quot;
+	oInfo.deleteBtnName   = &quot;agreement_file_DeleteBtn&quot;
+	agreement_file_GetControlInfo = oInfo
+End Function
+
+Sub OnRecordChanged(oEvent as Object)
+	RepoFileControl.OnRecordChanged(oEvent, agreement_file_GetControlInfo())
+End Sub
+
+Sub agreement_file_OnFilePickerModified(oEvent as Object)
+	RepoFileControl.OnFilePickerModified(oEvent, agreement_file_GetControlInfo())
+End Sub
+
+Sub agreement_file_OnFileUploadAction(oEvent as Object)
+	RepoFileControl.OnFileUploadAction(oEvent, agreement_file_GetControlInfo())
+End Sub
+
+Sub agreement_file_OnFileDownloadAction(oEvent as Object)
+	RepoFileControl.OnFileDownloadAction(oEvent, agreement_file_GetControlInfo())
+End Sub
+
+Function agreement_file_OnFileDeleteConfirm(oEvent as Object) as Integer
+	agreement_file_OnFileDeleteConfirm = RepoFileControl.OnFileDeleteConfirm(oEvent, agreement_file_GetControlInfo())
+End Function
+
+Sub agreement_file_OnFileDeleteAction(oEvent as Object)
+	RepoFileControl.OnFileDeleteAction(oEvent, agreement_file_GetControlInfo())
+End Sub
+</script:module>

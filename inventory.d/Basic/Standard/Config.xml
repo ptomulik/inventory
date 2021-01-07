@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Config" script:language="StarBasic">REM  *****  BASIC  *****
+
+Function GetActiveConnection(sQueryName as String) as Object
+	Dim oRootForm as Object
+	Dim oMainForm as Object
+	oRootForm = ThisComponent.Drawpage.Forms
+	oMainForm = oRootForm.getByIndex(0)
+	GetActiveConnection = oMainForm.ActiveConnection
+End Function
+
+Function QueryVariable(sVarName as String) as String
+	Dim oConn as Object
+	Dim oSql as Object
+	Dim oResult as Object
+	Dim sSql$
+	
+	oConn = GetActiveConnection()
+	oSql = oConn.createStatement()	
+	sSql = &quot;SELECT `config_value` FROM `config` WHERE `config_name` = &apos;&quot; + sVarName + &quot;&apos;;&quot;
+	oResult = oSql.executeQuery(sSql)
+	oResult.next
+	QueryVariable = oResult.getString(1)
+End Function
+
+Function GetRepositoryPath() as String
+	GetRepositoryPath = QueryVariable(&quot;repository_path&quot;)
+End Function
+</script:module>

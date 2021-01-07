@@ -33,16 +33,33 @@ Notes
    **repository_path** record in **config** table.
 3. You probably also have to install **libreoffice-mysql-connector** package::
 
-    apt-get install libreoffice-mysql-connector
+   apt-get install libreoffice-mysql-connector
 
 Developer Notes
 ---------------
 
-Updating database structure:
+Cloning fresh repository:
 
 .. code::
 
-  mysqldump -u inventory -p inventory -d --single-transaction | sed 's/ AUTO_INCREMENT=[0-9]*//g' > inventory.sql
+   git clone git@github.com:ptomulik/inventory
+   cd inventory
+   util/zip         # inventory.d -> inventory.odb
+
+Commiting changes made to ``inventory.odb``
+
+.. code::
+
+   util/unzip       # inventory.odb -> inventory.d
+   git add -A
+   git commit -m 'commit message'
+
+
+Updating database structure from running database:
+
+.. code::
+
+   mysqldump -u inventory -p inventory -d --single-transaction | sed 's/ AUTO_INCREMENT=[0-9]*//g' > inventory.sql
 
 .. _LibreOffice Base: https://www.libreoffice.org/discover/base/
 .. _MySQL: http://www.mysql.com/

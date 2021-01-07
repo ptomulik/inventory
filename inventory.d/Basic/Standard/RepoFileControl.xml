@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="RepoFileControl" script:language="StarBasic">REM  *****  BASIC  *****
+Type RepoFileControlInfo
+	keyColumnName as String
+	fileColumnName as String
+	idColumnName as String
+	pickerName as String
+	downloadBtnName as String
+	uploadBtnName as String
+	deleteBtnName as String
+End Type
+
+Function CreateControlInfo() as Object
+	CreateControlInfo = CreateObject(&quot;RepoFileControlInfo&quot;)
+End Function
+
+Function GetStringFieldValue(oForm as Object, sField$) as String
+	Dim lFileCol as Integer
+	lFileCol = oForm.findColumn(sField)
+	GetStringFieldValue = oForm.getString(lFileCol)
+End Function
+
+Function GetIntFieldValue(oForm as Object, sField$) as Integer
+	Dim lNameCol
+	lFileCol = oForm.findColumn(sField)
+	GetIntFieldValue = oForm.getInt(lFileCol)
+End Function
+
+Function MakeRepoFilePath(sTable$, iRecordId as Integer, sField$, sExt$) as String
+	Dim sDir$
+	Dim sNum$
+	Dim sFile$
+	Dim sSep$
+	sSep = GetPathSeparator()
+	sNum = Format(iRecordId, &quot;0000000000&quot;)
+	sDir = sTable + sSep + sNum
+	sFile = sNum + &quot;-&quot; + sField
+	If(Len(sExt) &gt; 0) Then
+		sFile = sFile + &quot;.&quot; + sExt
+	EndIf
+	MakeRepoFilePath = sDir + &quot;/&quot; + sFile
+End Function
+
+Sub SetStringFieldValue(oForm, sField$, sValue$)
+	Dim lNameCol
+	lFileCol = oForm.findColumn(sField)
+	oForm.updateString(lFileCol, sValue)
+End Sub
+
+Sub UploadFileToRepo(oForm as Object, oPicker as Object, sIdField$, sFileField$)
+	Dim sInPath$
+	Dim sInFile$
+	Dim sInFileBase$
+	Dim sExt$
+	Dim sOutPath$
+	Dim sOutDir$
+	Dim sTable$
+	Dim sSep$
+	Dim iRecordId as Integer
+	
+	GlobalScope.BasicLibraries.loadLibrary(&quot;Tools&quot;)
+	
+	sInPath = ConvertFromUrl(oPicker.Text)
+	sSep = GetPathSeparator()
+	sInFile = FileNameOutOfPath(sInPath, sSep)
+	sInFileBase = GetFileNameWithoutExtension(sInFile)
+	sExt = GetFileNameExtension(sInFile)
+	If sExt = sInFileBase Then
+		sExt = &quot;&quot;
+	EndIf
+	iRecordId = GetIntFieldValue(oForm, sIdField)
+	If(oForm.CommandType = TABLE) Then
+		sTable = oForm.Command
+	Else
+		sTable = oForm.Name
+	EndIf
+	sOutPath = MakeRepoFilePath(sTable, iRecordId, sFileField, sExt)
+	sOutDir = DirectoryNameOutOfPath(sOutPath, sSep)
+	If(not FileExists(Config.GetRepositoryPath() + sSep + sOutDir)) Then
+		MkDir(Config.GetRepositoryPath() + sSep + sOutDir)
+	EndIf
+	FileCopy(sInPath, Config.GetRepositoryPath() + sSep + sOutPath)
+	SetStringFieldValue(oForm, sFileField, sOutPath)
+	oForm.updateRow()
+	oPicker.Text = &quot;&quot;
+End Sub
+
+Sub DownloadFileFromRepo(oForm as Object, sColumnName$)
+	Dim sPath$
+	Dim sSep$
+	Dim sUrl$
+	Dim sFullPath$
+	Dim oShell as Object
+	sPath = GetStringFieldValue(oForm, sColumnName$)
+	sSep = GetPathSeparator()
+	sFullPath = Config.GetRepositoryPath() + sSep + sPath
+    sUrl = convertToUrl(sFullPath)
+    If sUrl = &quot;&quot; Then
+        msgBox (&quot;No Url found&quot;,16,&quot;Error&quot;)
+        Exit Sub
+    EndIf
+    oShell = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;)
+    oShell.Execute(sUrl,&quot;&quot;,0)
+End Sub
+
+Sub DeleteFileFromRepo(oForm as Object, sColumnName$)
+	Dim sPath$
+	Dim sMsg$
+	Dim bClearField as Boolean
+	sPath = GetStringFieldValue(oForm, sColumnName)
+	sSep = GetPathSeparator()
+	bClearField = True
+	If(FileExists(Config.GetRepositoryPath() + sSep + sPath)) Then
+		Kill(Config.GetRepositoryPath() + sSep + sPath)
+	Else
+	    sMsg = &quot;Nie znaleziono pliku &quot; + sPath + &quot; w repozytorium. Czy wyczyścić odnośnik w bazie danych?&quot;
+		If(MsgBox(sMsg, 308) &lt;&gt; 6) Then
+			bClearField = False
+		EndIf
+	EndIf
+	If(bClearField) Then
+		SetStringFieldValue(oForm, sColumnName, &quot;&quot;)
+		oForm.updateRow()
+	EndIf
+End Sub
+
+Sub OnRecordChanged(oEvent as Object, oInfo as Object)
+	Dim oForm as Object
+	Dim oDownloadBtn as Object
+	Dim oDeleteBtn as Object
+	Dim sPath$
+	
+	oForm = oEvent.Source
+
+	sPath = GetStringFieldValue(oForm, oInfo.fileColumnName)
+	If(Len(oInfo.downloadBtnName) &gt; 0) Then
+		oDownloadBtn = oForm.getByName(oInfo.downloadBtnName)
+		oDownloadBtn.enabled = (Len(Trim(sPath)) &gt; 0)
+	EndIf
+	If(Len(oInfo.deleteBtnName) &gt; 0) Then
+		oDeleteBtn = oForm.getByName(oInfo.deleteBtnName)
+		oDeleteBtn.enabled = (Len(Trim(sPath)) &gt; 0)
+	EndIf
+End Sub
+
+Sub OnFilePickerModified(oEvent as Object, oInfo as Object)
+	Dim oPicker as Object
+	Dim oForm as Object
+	Dim oBtn as Object
+	oPicker = oEvent.Source
+	oForm = oPicker.getModel().getParent()
+	oBtn = oForm.getByName(oInfo.uploadBtnName)
+	oBtn.enabled = (Len(Trim(oPicker.text)) &gt; 0)
+End Sub
+
+Sub OnFileUploadAction(oEvent as Object, oInfo as Object)
+	Dim oPicker as Object
+	Dim oForm as Object
+	oBtn = oEvent.Source
+	oForm = oBtn.getModel().getParent()
+	oPicker = oForm.getByName(oInfo.pickerName)
+	UploadFileToRepo(oForm, oPicker, oInfo.keyColumnName, oInfo.fileColumnName)
+End Sub
+
+Sub OnFileDownloadAction(oEvent as Object, oInfo as Object)
+	Dim oForm as Object
+	Dim oBtn as Object
+	oBtn = oEvent.Source
+	oForm = oBtn.getModel().getParent()
+	DownloadFileFromRepo(oForm, oInfo.fileColumnName)
+End Sub
+
+Function OnFileDeleteConfirm(oEvent as Object, oInfo as Object) as Boolean
+	Dim oBtn as Object
+	Dim sPath$
+	Dim sFile$
+	Dim sId$
+	Dim sMsg$
+	oBtn = oEvent.Source
+	oForm = oBtn.getModel().getParent()
+	sPath = GetStringFieldValue(oForm, oInfo.fileColumnName)
+	sFile = FileNameOutOfPath(sPath)
+	sMsg = &quot;Czy napewno chcesz usunąć plik &apos;&quot; + sFile + &quot;&apos;&quot;
+	If(Len(oInfo.idColumnName) &gt; 0) Then
+		If(Len(oInfo.idColumnName) &gt; 0) Then
+			sId = GetStringFieldValue(oForm, oInfo.idColumnName)
+		ElseIf(Len(oInfo.keyColumnName) &gt; 0) Then
+			sId = GetStringFieldValue(oForm, oInfo.keyColumnName)
+		Endif
+		If(Len(sId) &gt; 0) Then
+			sMsg = sMsg + &quot; (rekord: &quot; + sId + &quot;)&quot;
+		EndIf
+	EndIf
+	OnFileDeleteConfirm = (MsgBox(sMsg, 308) = 6)
+End Function
+
+Sub OnFileDeleteAction(oEvent as Object, oInfo as Object)
+	Dim oBtn as Object
+	oBtn = oEvent.Source
+	oForm = oBtn.getModel().getParent()
+	DeleteFileFromRepo(oForm, oInfo.fileColumnName)
+End Sub
+</script:module>

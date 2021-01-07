@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+set -e
+
+script=`readlink -f "$0"`
+here=`dirname "$script"`;
+top=`dirname "$here"`;
+ts=`date +"%Y%m%d%H%M%S"`
+
+file="${top}/inventory.odb";
+dir="${top}/inventory.d";
+bkp="${top}/inventory.${ts}.odb.bkp"
+
+if [ ! -d "${dir}" ]; then
+  echo "error: '${dir}': no such directory" >&2;
+  exit 1
+fi
+
+if [ -e "${file}" ]; then
+  mv "${file}" "${bkp}"
+fi
+
+(cd ${dir} && zip -r "${file}" *);
