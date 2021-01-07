@@ -23,3 +23,5 @@ fi
 mkdir -p "${dir}"
 
 unzip "${file}" -d "${dir}"
+
+sed -e 's|\(db:hostname\s*=\s*\)"[^"]\+"|\1"localhost"|g' -i "${dir}/content.xml"
