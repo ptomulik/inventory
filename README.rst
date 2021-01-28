@@ -22,6 +22,12 @@ components
 Installation
 ------------
 
+.. code::
+
+   git clone https://github.com:ptomulik/inventory
+   cd inventory
+   util/checkout-odb         # inventory.d -> inventory.odb
+
 Notes
 -----
 
