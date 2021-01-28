@@ -44,13 +44,13 @@ Cloning fresh repository:
 
    git clone git@github.com:ptomulik/inventory
    cd inventory
-   util/zip         # inventory.d -> inventory.odb
+   util/checkout-odb         # inventory.d -> inventory.odb
 
 Commiting changes made to ``inventory.odb``
 
 .. code::
 
-   util/unzip       # inventory.odb -> inventory.d
+   util/commit-odb       # inventory.odb -> inventory.d
    git add -A
    git commit -m 'commit message'
 
