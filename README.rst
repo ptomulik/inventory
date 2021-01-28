@@ -22,11 +22,23 @@ components
 Installation
 ------------
 
+Checking out repository.
+
 .. code::
 
    git clone https://github.com:ptomulik/inventory
    cd inventory
    util/checkout-odb         # inventory.d -> inventory.odb
+
+Preparing database
+
+1. Create empty MySQL database (call it ``inventory``) and grant a DB user (call it
+   ``inventory`` too) rights to the database.
+3. Create tables in ``inventory`` databases
+
+   .. code::
+
+      cat inventory.sql | mysql -u inventory -p inventory
 
 Notes
 -----
